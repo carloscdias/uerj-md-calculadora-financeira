@@ -11,14 +11,14 @@ class CalculadoraFinanceira(QMainWindow):
         # Data
         self._simulation_data = None
         # Connecting signals
-        self.simular.clicked.connect(self._simular_click)
-        self.actionSair.triggered.connect(self._exit_click)
-        self.actioncsv.triggered.connect(self._export_as_csv_click)
+        self.simular.clicked.connect(self._run_simulation)
+        self.actionSair.triggered.connect(self._exit)
+        self.actioncsv.triggered.connect(self._export_as_csv)
 
-    def _exit_click(self, button):
+    def _exit(self, button):
         QApplication.quit()
 
-    def _export_as_csv_click(self, button):
+    def _export_as_csv(self, button):
         filename, _ = QFileDialog.getSaveFileName(self, filter = "CSV Files (*.csv)")
 
         if filename:
@@ -31,13 +31,7 @@ class CalculadoraFinanceira(QMainWindow):
             ])
             df.to_csv(filename, index = False)
 
-    def _export_as_pdf_click(self, button):
-        filename, _ = QFileDialog.getSaveFileName(self, filter = "PDF Files (*.pdf)")
-        print(filename)
-        if filename:
-            pass
-
-    def _simular_click(self, button):
+    def _run_simulation(self, button):
         # When the user clicks in the "simular" button
         # erase previous simulations
         for i in range(self.tabela.rowCount()):
@@ -53,7 +47,7 @@ class CalculadoraFinanceira(QMainWindow):
 
         # generate rows according to the selected simulation and given data
         self._simulation_data = financing_methods[True](valor, taxa, parcelas)
-        # the rows will be added to the table
+        # add rows to the table
         for row in self._simulation_data:
             self._add_row_to_table(*row)
 
@@ -64,7 +58,7 @@ class CalculadoraFinanceira(QMainWindow):
         self.tabela.setItem(index, 0, Item(str(parcela)))
         # monetary values
         for i, value in enumerate([valor_prestacao, amortizacao, juros, saldo_devedor]):
-            self.tabela.setItem(index, i + 1, Item(('R$ ' + currency(value, False, True)) if value != '' else ""))
+            self.tabela.setItem(index, i + 1, Item(('R$ ' + currency(value, False, True)) if value != '' else ''))
 
     def _sac_simulation(self, valor, taxa, parcelas):
         rows = [(0, '', '', '', valor)]
