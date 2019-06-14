@@ -256,7 +256,6 @@
       <string>Exportar</string>
      </property>
      <addaction name="actioncsv"/>
-     <addaction name="actionpdf"/>
     </widget>
     <addaction name="menuExportar"/>
     <addaction name="actionSair"/>

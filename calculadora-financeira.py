@@ -1,14 +1,41 @@
 import sys
 from locale import currency
-from PyQt5 import QtWidgets, uic
-from PyQt5.QtWidgets import QTableWidgetItem as Item
+from PyQt5 import uic
+from PyQt5.QtWidgets import QFileDialog, QApplication, QMainWindow, QTableWidgetItem as Item
+import pandas as pd
 
-class CalculadoraFinanceira(QtWidgets.QMainWindow):
+class CalculadoraFinanceira(QMainWindow):
     def __init__(self):
         super(CalculadoraFinanceira, self).__init__()
         uic.loadUi('calculadora-financeira-gui.ui', self)
+        # Data
+        self._simulation_data = None
         # Connecting signals
         self.simular.clicked.connect(self._simular_click)
+        self.actionSair.triggered.connect(self._exit_click)
+        self.actioncsv.triggered.connect(self._export_as_csv_click)
+
+    def _exit_click(self, button):
+        QApplication.quit()
+
+    def _export_as_csv_click(self, button):
+        filename, _ = QFileDialog.getSaveFileName(self, filter = "CSV Files (*.csv)")
+
+        if filename:
+            df = pd.DataFrame(self._simulation_data, columns = [
+                'parcelas',
+                'prestacao',
+                'amortizacao',
+                'juros',
+                'saldo_devedor',
+            ])
+            df.to_csv(filename, index = False)
+
+    def _export_as_pdf_click(self, button):
+        filename, _ = QFileDialog.getSaveFileName(self, filter = "PDF Files (*.pdf)")
+        print(filename)
+        if filename:
+            pass
 
     def _simular_click(self, button):
         # When the user clicks in the "simular" button
@@ -25,9 +52,9 @@ class CalculadoraFinanceira(QtWidgets.QMainWindow):
         }
 
         # generate rows according to the selected simulation and given data
-        rows = financing_methods[True](valor, taxa, parcelas)
+        self._simulation_data = financing_methods[True](valor, taxa, parcelas)
         # the rows will be added to the table
-        for row in rows:
+        for row in self._simulation_data:
             self._add_row_to_table(*row)
 
     def _add_row_to_table(self, parcela, valor_prestacao, amortizacao, juros, saldo_devedor):
@@ -69,7 +96,7 @@ class CalculadoraFinanceira(QtWidgets.QMainWindow):
         return rows
 
 if __name__ == '__main__':
-    app = QtWidgets.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     window = CalculadoraFinanceira()
     window.show()
     sys.exit(app.exec_())
