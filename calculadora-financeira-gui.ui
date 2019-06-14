@@ -251,25 +251,31 @@
     <property name="title">
      <string>Arquivo</string>
     </property>
-    <addaction name="actionExportar"/>
-    <addaction name="actionImprimir"/>
+    <widget class="QMenu" name="menuExportar">
+     <property name="title">
+      <string>Exportar</string>
+     </property>
+     <addaction name="actioncsv"/>
+     <addaction name="actionpdf"/>
+    </widget>
+    <addaction name="menuExportar"/>
     <addaction name="actionSair"/>
    </widget>
    <addaction name="menuArquivo"/>
   </widget>
-  <action name="actionExportar">
-   <property name="text">
-    <string>Exportar</string>
-   </property>
-  </action>
-  <action name="actionImprimir">
-   <property name="text">
-    <string>Imprimir</string>
-   </property>
-  </action>
   <action name="actionSair">
    <property name="text">
     <string>Sair</string>
+   </property>
+  </action>
+  <action name="actioncsv">
+   <property name="text">
+    <string>CSV</string>
+   </property>
+  </action>
+  <action name="actionpdf">
+   <property name="text">
+    <string>PDF</string>
    </property>
   </action>
  </widget>
